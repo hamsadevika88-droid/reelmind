@@ -1,0 +1,246 @@
+{
+  "app_name": "ReelMind",
+  "description": "AI-Powered Video Ad Generator",
+  "agents": {
+    "ad_strategist_agent": {
+      "agent_id": "69fba22d15a0b6d02f5c943f",
+      "name": "AdStrategy Probability Agent",
+      "type": "sub-agent",
+      "provider": "OpenAI",
+      "model": "gpt-5.2",
+      "response_schema_file": "response_schemas/adstrategy_probability_agent_response.json"
+    },
+    "trendsync_agent": {
+      "agent_id": "69fb816bf6378cf2090e0af0",
+      "name": "TrendSync Research Agent",
+      "type": "sub-agent",
+      "provider": "Perplexity",
+      "model": "perplexity/sonar-pro",
+      "response_schema_file": "response_schemas/trendsync_research_agent_response.json"
+    },
+    "buyermind_agent": {
+      "agent_id": "69fb816ba451931797ccd767",
+      "name": "BuyerMind Persona Agent",
+      "type": "sub-agent",
+      "provider": "Anthropic",
+      "model": "claude-sonnet-4-6",
+      "response_schema_file": "response_schemas/buyermind_persona_agent_response.json"
+    },
+    "scriptwriter_agent": {
+      "agent_id": "69fb816b1c2d3cd9f78bf1f9",
+      "name": "Script Writer & Selector Agent",
+      "type": "sub-agent",
+      "provider": "OpenAI",
+      "model": "gpt-5.2",
+      "response_schema_file": "response_schemas/script_writer_selector_agent_response.json"
+    },
+    "cmo_evaluator_agent": {
+      "agent_id": "69fba22d21f53de3abed7a09",
+      "name": "CMO Evaluator Agent",
+      "type": "sub-agent",
+      "provider": "Anthropic",
+      "model": "claude-sonnet-4-6",
+      "response_schema_file": "response_schemas/cmo_evaluator_agent_response.json"
+    },
+    "audio_director_agent": {
+      "agent_id": "69fba22d3632d3498e8c3b40",
+      "name": "Audio Director Agent",
+      "type": "sub-agent",
+      "provider": "OpenAI",
+      "model": "gpt-5.2",
+      "response_schema_file": "response_schemas/audio_director_agent_response.json"
+    },
+    "voice_script_agent": {
+      "agent_id": "69fba22eea41eba7af481907",
+      "name": "Voice Script Agent",
+      "type": "sub-agent",
+      "provider": "OpenAI",
+      "model": "gpt-5.2",
+      "response_schema_file": "response_schemas/voice_script_agent_response.json"
+    },
+    "avatar_director_agent": {
+      "agent_id": "69fba22e21f53de3abed7a0b",
+      "name": "Avatar Director Agent",
+      "type": "sub-agent",
+      "provider": "OpenAI",
+      "model": "gpt-5.2",
+      "response_schema_file": "response_schemas/avatar_director_agent_response.json"
+    },
+    "videorenderer_agent": {
+      "agent_id": "69fb816c6c8540ce49b897df",
+      "name": "HTML Creative Director Agent",
+      "type": "sub-agent",
+      "provider": "Anthropic",
+      "model": "claude-sonnet-4-6",
+      "response_schema_file": "response_schemas/video_renderer_agent_response.json"
+    },
+    "manager_agent": {
+      "agent_id": "69fb81896c8540ce49b897e1",
+      "name": "Reel Production Manager",
+      "type": "manager",
+      "provider": "OpenAI",
+      "model": "gpt-5.1",
+      "managed_agents": [
+        "69fb816bf6378cf2090e0af0",
+        "69fb816ba451931797ccd767",
+        "69fb816b1c2d3cd9f78bf1f9",
+        "69fb816c6c8540ce49b897df",
+        "69fba22d15a0b6d02f5c943f",
+        "69fba22d21f53de3abed7a09",
+        "69fba22d3632d3498e8c3b40",
+        "69fba22eea41eba7af481907",
+        "69fba22e21f53de3abed7a0b"
+      ],
+      "response_schema_file": "response_schemas/reel_production_manager_response.json"
+    }
+  },
+  "workflow": {
+    "entry_point": "manager_agent",
+    "pipeline_order": [
+      "ad_strategist_agent",
+      "trendsync_agent",
+      "buyermind_agent",
+      "scriptwriter_agent",
+      "cmo_evaluator_agent",
+      "audio_director_agent",
+      "voice_script_agent",
+      "avatar_director_agent",
+      "videorenderer_agent"
+    ]
+  },
+  "build_context_pdf": "https://asset.lyzr.app/mC4BTH4A",
+  "iteration_log": [
+    {
+      "date": "2026-05-06",
+      "changes": "Updated 3 agents (Script Writer, Video Renderer, Reel Production Manager) to support regional language selection and audio/sound effects preferences",
+      "agents_updated": [
+        "69fb816b1c2d3cd9f78bf1f9",
+        "69fb816c6c8540ce49b897df",
+        "69fb81896c8540ce49b897e1"
+      ],
+      "features_added": ["regional_language_selection", "audio_sound_effects"]
+    },
+    {
+      "date": "2026-05-06",
+      "changes": "Major iteration: (1) Removed user-selected audio - audio is now 100% automatic based on script emotional arc, (2) Switched to Instagram Reels/TikTok vertical format 1080x1920 (9:16), (3) Enhanced script writing for viral-first approach with scroll-stopping hooks, pattern-interrupting formats, and FOMO-driven CTAs, (4) Added auto audio_design output (background_music_genre, audio_mood, beat_tempo, sound_effects[]), (5) Fast punchy Instagram-style transitions and shorter slide durations",
+      "agents_updated": [
+        "69fb816b1c2d3cd9f78bf1f9",
+        "69fb816c6c8540ce49b897df",
+        "69fb81896c8540ce49b897e1"
+      ],
+      "features_added": ["automatic_audio_design", "vertical_9_16_format", "viral_first_scripts", "instagram_reels_optimization"]
+    },
+    {
+      "date": "2026-05-06",
+      "changes": "Major creative upgrade: (1) Transformed script format to 'human presenter product demo b-roll montage hybrid' with 6 scene_types (presenter, product_close_up, b_roll, montage, data_point, testimonial), (2) Added story arc structure HOOK-PROBLEM-DEMO-PROOF-CTA, (3) Added per-slide visual_direction and text_animation fields, (4) Enhanced audio_design with sound_effects array and music_intensity_curve, (5) Video Renderer now applies scene-type-aware styling with dramatic color variation, varied durations, and matched transitions, (6) 5-dimension scoring (hook_strength, emotional_resonance, viral_potential, product_clarity, pacing), (7) Manager ensures premium demo-quality output rivaling Apple/Nike brand videos",
+      "agents_updated": [
+        "69fb816b1c2d3cd9f78bf1f9",
+        "69fb816c6c8540ce49b897df",
+        "69fb81896c8540ce49b897e1"
+      ],
+      "features_added": ["presenter_demo_hybrid_format", "scene_type_system", "visual_direction", "text_animation", "enhanced_audio_design", "5_dimension_scoring", "cinematic_color_theory", "variable_duration_per_scene"]
+    },
+    {
+      "date": "2026-05-06",
+      "changes": "Fixed audio: Added FFmpeg post-processing pipeline to overlay background music on rendered videos. Heyframes renders silent video, then FFmpeg adds music track matched to genre/mood from agent output. Music library maps 30+ moods/genres to royalty-free tracks. Both auto-render and manual render now pass backgroundMusic config. Videos now have H264 video + AAC audio streams.",
+      "agents_updated": [],
+      "features_added": ["ffmpeg_audio_overlay", "music_library_matching", "background_music_integration"]
+    },
+    {
+      "date": "2026-05-06",
+      "changes": "Major pipeline expansion: Added 5 new specialized agents to the production pipeline. (1) AdStrategy Probability Agent - analyzes products and recommends highest-probability ad format with confidence scores, (2) CMO Evaluator Agent - reviews scripts with 10-dimension scoring and PASS/REVISE/REJECT verdicts, (3) Audio Director Agent - designs complete audio landscape with music, SFX, voice specs, and mixing levels, (4) Voice Script Agent - creates polished voiceover scripts with timing marks, emotion cues, and dual versions, (5) Avatar Director Agent - designs shot-by-shot visual storyboards with camera angles, lighting, and cinematic effects. Updated Reel Production Manager to orchestrate all 9 agents in expanded pipeline.",
+      "agents_updated": [
+        "69fb81896c8540ce49b897e1"
+      ],
+      "agents_created": [
+        "69fba22d15a0b6d02f5c943f",
+        "69fba22d21f53de3abed7a09",
+        "69fba22d3632d3498e8c3b40",
+        "69fba22eea41eba7af481907",
+        "69fba22e21f53de3abed7a0b"
+      ],
+      "features_added": ["ad_strategy_analysis", "cmo_quality_gate", "audio_direction", "voice_scripting", "avatar_visual_direction", "9_agent_pipeline"]
+    },
+    {
+      "date": "2026-05-06",
+      "changes": "Critical bug fix: Updated Video Renderer Agent and Reel Production Manager to enforce slides array output. Both agents now have explicit instructions to NEVER return video_url as a placeholder string. The compositionId must always be 'ExplainerDeck' and the slides array (4-8 objects with title, subtitle, background, accent, durationInFrames, transition) is mandatory. Response schemas updated to structurally enforce slides array at the schema level.",
+      "agents_updated": [
+        "69fb816c6c8540ce49b897df",
+        "69fb81896c8540ce49b897e1"
+      ],
+      "features_added": ["enforced_slides_output", "schema_level_slides_validation", "no_placeholder_video_url"]
+    },
+    {
+      "date": "2026-05-06",
+      "changes": "Fixed duplicate template issue: Both Video Renderer and Reel Production Manager were generating the same generic slides ('STOP SCROLLING', 'THE PROBLEM', 'THE SOLUTION', 'GET IT NOW') for every product because the response schemas had hardcoded examples the agents copied. Fix: (1) Updated Video Renderer instructions with BANNED phrases list, product-category color palettes, varied video styles, and requirement to reference actual product in every slide title, (2) Updated Manager instructions with quality control checklist requiring product-specific content verification before output, (3) Replaced hardcoded example slides in both response schemas with placeholder instructions demanding unique content.",
+      "agents_updated": [
+        "69fb816c6c8540ce49b897df",
+        "69fb81896c8540ce49b897e1"
+      ],
+      "features_added": ["unique_template_enforcement", "banned_generic_phrases", "product_category_color_palettes", "varied_video_styles", "quality_control_checklist"]
+    },
+    {
+      "date": "2026-05-07",
+      "changes": "Major architecture change: Replaced slides-based video rendering with HTML-to-video pipeline inspired by HeyFrames/Hyperframes. (1) Renamed Video Renderer Agent to 'HTML Creative Director Agent' - now generates complete, unique HTML compositions with CSS animations instead of JSON slides, (2) Updated Reel Production Manager to coordinate HTML-based flow and validate HTML output, (3) Updated API route to accept html_code, wrap in Hyperframes-compatible structure (data-composition-id, viewport), write to job directory, and render via 'npx hyperframes render' CLI, (4) Added FFmpeg audio overlay for HTML-rendered videos, (5) Updated UI with HtmlPreview component (iframe-based), HTML-first auto-render with slides fallback, (6) Each product now gets a COMPLETELY unique HTML ad - no repeated templates, varied layouts/animations/colors/typography per product category, (7) Agent banned from using JavaScript, external resources - pure CSS animations for deterministic frame-by-frame rendering",
+      "agents_updated": [
+        "69fb816c6c8540ce49b897df",
+        "69fb81896c8540ce49b897e1"
+      ],
+      "features_added": ["html_to_video_rendering", "hyperframes_integration", "unique_html_compositions", "css_animation_video", "html_preview_component", "creative_concept_naming", "no_template_repetition"]
+    },
+    {
+      "date": "2026-05-07",
+      "changes": "Major cinematic upgrade to compete with GetKoro.app: Updated ALL 10 agents with cinematic-level instructions. (1) AdStrategy: 12 content type probability scoring with platform-specific recommendations (IG Reels/TikTok/YouTube Shorts), engagement predictions, ROAS estimates; (2) TrendSync: Real-time viral trend research with grounding rules, source-backed research for hooks, music, transitions, color palettes, competitor analysis; (3) BuyerMind: 3 psychographic personas with emotional journey mapping, platform behavior profiling, purchase psychology, content preferences; (4) Script Writer: Content-type-specific script structures for all 12 types (UGC, Product Demo, Fashion, Jewellery, Hook+Demo, App Demo, Testimonial, Unboxing, Before/After, Tutorial, Lifestyle, Service Explainer) with scene-by-scene cinematic directions (camera angles, lighting, transitions, sound cues); (5) CMO Evaluator: 12-dimension scoring (hook strength, emotional resonance, viral shareability, brand consistency, platform optimization, audio-visual sync, CTA effectiveness, pacing/rhythm, production value, cultural relevance, competitive edge vs GetKoro, conversion potential) with APPROVE/REVISE/REJECT gate; (6) Audio Director: Complete audio landscapes with content-type-specific genre selection, BPM-matched music intensity curves, scene-by-scene SFX timelines with stereo positioning, voiceover emotion maps, professional mix levels with ducking strategies, strategic silence; (7) Voice Script: Delivery-ready VO with inline emotion cues, timing marks, breathing pauses, emphasis markers, pace notation, on-screen text sync, dual versions (primary + alternative), content-type voice matching; (8) Avatar Director: Shot-by-shot storyboards with camera specs (angle, movement, lens, focus), lighting design (key/fill/color temp/effects), background settings per content type, color grading (LUT, palette, contrast, saturation), composition rules, transitions, B-roll lists, product hero shots; (9) HTML Creative Director: Content-type-specific visual approaches (UGC grain, Apple-style product demo, fashion editorial, jewellery luxury dark+gold, testimonial trust, before/after transformation, lifestyle aspirational), mandatory cinematic CSS (text animations, scene transitions, visual effects, typography, scene timing), layout variety requirements, color theory; (10) Reel Production Manager: 9-stage pipeline with CMO quality gate logic (revision loops), comprehensive final output with all production assets, quality checks on HTML output. Updated workflow visualization with conditional CMO decision node.",
+      "agents_updated": [
+        "69fba22d15a0b6d02f5c943f",
+        "69fb816bf6378cf2090e0af0",
+        "69fb816ba451931797ccd767",
+        "69fb816b1c2d3cd9f78bf1f9",
+        "69fba22d21f53de3abed7a09",
+        "69fba22d3632d3498e8c3b40",
+        "69fba22eea41eba7af481907",
+        "69fba22e21f53de3abed7a0b",
+        "69fb816c6c8540ce49b897df",
+        "69fb81896c8540ce49b897e1"
+      ],
+      "features_added": [
+        "12_content_types",
+        "getkoro_competitive_parity",
+        "platform_specific_optimization",
+        "12_dimension_cmo_scoring",
+        "content_type_visual_approaches",
+        "cinematic_css_techniques",
+        "psychographic_persona_profiling",
+        "emotional_journey_mapping",
+        "audio_intensity_curves",
+        "stereo_sfx_positioning",
+        "voiceover_emotion_cues",
+        "dual_voice_versions",
+        "camera_lens_specifications",
+        "lighting_design_system",
+        "color_grading_lut_system",
+        "b_roll_shot_lists",
+        "product_hero_shots",
+        "cmo_revision_loops",
+        "engagement_roas_predictions",
+        "anti_hallucination_grounding"
+      ]
+    },
+    {
+      "date": "2026-05-07",
+      "changes": "Critical black screen fix: Updated HTML Creative Director Agent instructions to enforce visibility-first HTML structure. (1) Added 12 mandatory HTML structure rules at top of instructions - all scenes MUST have opacity:1, NEVER opacity:0, (2) Banned using CSS animations for visibility control (opacity 0->1 forbidden), only decorative animations allowed, (3) Every scene must use class='scene' for GSAP pipeline identification, (4) Required vibrant different backgrounds per scene, (5) Minimum font sizes enforced (48px titles, 24px body), (6) Added correct HTML template structure example with opacity:1 default, (7) Updated response schema example to remove opacity:0 pattern that agents were copying, (8) Added visual quality requirements for professional premium output, (9) Explicit ban list for practices causing black screens (opacity:0, visibility:hidden, display:none, JavaScript)",
+      "agents_updated": [
+        "69fb816c6c8540ce49b897df"
+      ],
+      "features_added": ["visibility_first_html", "black_screen_prevention", "opacity_1_enforcement", "decorative_only_animations", "scene_class_requirement", "vibrant_background_requirement", "minimum_font_sizes", "correct_template_example"]
+    },
+    {
+      "date": "2026-05-07",
+      "changes": "Critical video quality rules added to Reel Production Manager: (1) Manager now validates HTML Creative Director output for opacity:1 on all scenes - rejects if any scene has opacity:0, (2) Removed background_music from final output and response schema - rendering pipeline no longer adds audio, (3) Manager enforces class='scene' on all scene divs, (4) Validates vibrant different backgrounds per scene, (5) Ensures html_code is complete HTML document not fragment, (6) Bans placeholder video_url strings, (7) Added pre-output Quality Gate Checklist with 7 mandatory checks",
+      "agents_updated": [
+        "69fb81896c8540ce49b897e1"
+      ],
+      "features_added": ["manager_opacity_validation", "no_background_music_output", "scene_class_enforcement", "vibrant_background_validation", "complete_html_requirement", "no_placeholder_urls", "quality_gate_checklist"]
+    }
+  ]
+}

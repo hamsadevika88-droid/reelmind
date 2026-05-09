@@ -1,0 +1,86 @@
+{
+  "agent_name": "Reel Production Manager",
+  "agent_id": "69fb81896c8540ce49b897e1",
+  "description": "Orchestrates the full autonomous 9-agent pipeline for creating unique HTML-based video advertisements with strict video quality validation",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "result": {
+      "production_status": "string",
+      "trend_summary": "string",
+      "selected_persona": {
+        "name": "string",
+        "emotional_tone": "string"
+      },
+      "winning_script": {
+        "hook": "string",
+        "body": "string",
+        "cta": "string",
+        "composite_score": "number",
+        "creative_angle": "string",
+        "language": "string"
+      },
+      "all_script_scores": [
+        {
+          "script_number": "number",
+          "composite_score": "number"
+        }
+      ],
+      "video_result": {
+        "html_code": "string",
+        "creative_concept": "string",
+        "total_duration_seconds": "number",
+        "scene_count": "number"
+      },
+      "viral_score": "number",
+      "emotional_tone": "string",
+      "production_metadata": {
+        "total_processing_time": "string",
+        "agents_used": ["string"],
+        "pipeline_steps_completed": "number"
+      }
+    }
+  },
+  "example_response": {
+    "result": {
+      "production_status": "Completed",
+      "trend_summary": "Key trends identified for the product category",
+      "selected_persona": {
+        "name": "Target Persona Name",
+        "emotional_tone": "Aspirational"
+      },
+      "winning_script": {
+        "hook": "[UNIQUE hook specific to the product]",
+        "body": "[Product-specific body copy with real benefits]",
+        "cta": "[Creative CTA tailored to the product]",
+        "composite_score": 88,
+        "creative_angle": "[Angle chosen specifically for this product]",
+        "language": "English"
+      },
+      "all_script_scores": [
+        { "script_number": 1, "composite_score": 88 },
+        { "script_number": 2, "composite_score": 75 }
+      ],
+      "video_result": {
+        "html_code": "<!DOCTYPE html><html><head><style>.scene{width:1080px;height:1920px;opacity:1;position:relative;}</style></head><body><div class='scene' style='background:linear-gradient(135deg,#FF6B35,#F7C948);opacity:1;'>...</div></body></html>",
+        "creative_concept": "Neon Pulse - Dynamic neon typography with dark theme",
+        "total_duration_seconds": 20,
+        "scene_count": 6
+      },
+      "viral_score": 85,
+      "emotional_tone": "Aspirational",
+      "production_metadata": {
+        "total_processing_time": "45 seconds",
+        "agents_used": ["AdStrategy", "TrendSync", "BuyerMind", "Script Writer", "CMO Evaluator", "Audio Director", "Voice Script", "Avatar Director", "HTML Creative Director"],
+        "pipeline_steps_completed": 9
+      }
+    }
+  },
+  "has_module_outputs": true,
+  "module_outputs_example": {
+    "artifact_files": [
+      { "file_url": "https://example.com/image.png" }
+    ]
+  }
+}

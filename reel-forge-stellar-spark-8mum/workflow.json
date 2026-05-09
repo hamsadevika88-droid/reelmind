@@ -1,0 +1,29 @@
+{
+  "nodes": [
+    {"id": "input_node", "type": "Input", "label": "Product Photo + Description", "nodeCategory": "input"},
+    {"id": "manager_agent", "type": "Agent", "label": "Reel Production Manager", "nodeCategory": "agent"},
+    {"id": "ad_strategy_agent", "type": "Agent", "label": "AdStrategy Probability Agent", "nodeCategory": "agent"},
+    {"id": "trendsync_agent", "type": "Agent", "label": "TrendSync Research Agent", "nodeCategory": "agent"},
+    {"id": "buyermind_agent", "type": "Agent", "label": "BuyerMind Persona Agent", "nodeCategory": "agent"},
+    {"id": "scriptwriter_agent", "type": "Agent", "label": "Script Writer & Selector", "nodeCategory": "agent"},
+    {"id": "cmo_evaluator_agent", "type": "Agent", "label": "CMO Evaluator Agent", "nodeCategory": "agent"},
+    {"id": "audio_director_agent", "type": "Agent", "label": "Audio Director Agent", "nodeCategory": "agent"},
+    {"id": "voice_script_agent", "type": "Agent", "label": "Voice Script Agent", "nodeCategory": "agent"},
+    {"id": "avatar_director_agent", "type": "Agent", "label": "Avatar Director Agent", "nodeCategory": "agent"},
+    {"id": "video_renderer_agent", "type": "Agent", "label": "Video Renderer Agent", "nodeCategory": "agent"},
+    {"id": "output_node", "type": "Output", "label": "Cinematic Video Ad", "nodeCategory": "end"}
+  ],
+  "edges": [
+    {"source": "input_node", "target": "manager_agent"},
+    {"source": "manager_agent", "target": "ad_strategy_agent"},
+    {"source": "ad_strategy_agent", "target": "trendsync_agent"},
+    {"source": "trendsync_agent", "target": "buyermind_agent"},
+    {"source": "buyermind_agent", "target": "scriptwriter_agent"},
+    {"source": "scriptwriter_agent", "target": "cmo_evaluator_agent"},
+    {"source": "cmo_evaluator_agent", "target": "audio_director_agent"},
+    {"source": "audio_director_agent", "target": "voice_script_agent"},
+    {"source": "voice_script_agent", "target": "avatar_director_agent"},
+    {"source": "avatar_director_agent", "target": "video_renderer_agent"},
+    {"source": "video_renderer_agent", "target": "output_node"}
+  ]
+}

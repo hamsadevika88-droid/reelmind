@@ -1,0 +1,98 @@
+{
+  "agent_name": "Audio Director Agent",
+  "agent_id": "69fba22d3632d3498e8c3b40",
+  "description": "World-class audio director and sound designer that creates immersive audio experiences for video ads - selecting background music, sound effects, voice styles, and audio mixing strategies.",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "result": {
+      "background_music": {
+        "genre": "string",
+        "sub_genre": "string",
+        "bpm": "number",
+        "mood": "string",
+        "energy_level": "string",
+        "key_instruments": "string"
+      },
+      "sound_effects": [
+        {
+          "scene": "string",
+          "effect_name": "string",
+          "timing": "string",
+          "intensity": "string"
+        }
+      ],
+      "voice_design": {
+        "voice_type": "string",
+        "gender": "string",
+        "age_range": "string",
+        "accent": "string",
+        "speaking_style": "string",
+        "emotion": "string",
+        "words_per_minute": "number",
+        "language": "string",
+        "secondary_language": "string"
+      },
+      "music_intensity_curve": [
+        {
+          "scene_label": "string",
+          "intensity_level": "number",
+          "description": "string"
+        }
+      ],
+      "audio_mixing": {
+        "voice_level_db": "number",
+        "music_level_db": "number",
+        "sfx_level_db": "number",
+        "ducking_strategy": "string"
+      },
+      "audio_recommendation": "string"
+    }
+  },
+  "example_response": {
+    "result": {
+      "background_music": {
+        "genre": "sample string",
+        "sub_genre": "sample string",
+        "bpm": 0,
+        "mood": "sample string",
+        "energy_level": "sample string",
+        "key_instruments": "sample string"
+      },
+      "sound_effects": [
+        {
+          "scene": "sample string",
+          "effect_name": "sample string",
+          "timing": "sample string",
+          "intensity": "sample string"
+        }
+      ],
+      "voice_design": {
+        "voice_type": "sample string",
+        "gender": "sample string",
+        "age_range": "sample string",
+        "accent": "sample string",
+        "speaking_style": "sample string",
+        "emotion": "sample string",
+        "words_per_minute": 0,
+        "language": "sample string",
+        "secondary_language": "sample string"
+      },
+      "music_intensity_curve": [
+        {
+          "scene_label": "sample string",
+          "intensity_level": 0,
+          "description": "sample string"
+        }
+      ],
+      "audio_mixing": {
+        "voice_level_db": 0,
+        "music_level_db": 0,
+        "sfx_level_db": 0,
+        "ducking_strategy": "sample string"
+      },
+      "audio_recommendation": "sample string"
+    }
+  }
+}

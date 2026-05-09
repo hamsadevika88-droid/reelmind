@@ -1,0 +1,26 @@
+ITERATION COMPLETE - Black Screen Fix + Music Removal
+
+Changes made:
+1. Fixed black screen issue in wrapHtmlForHyperframes (app/api/heyframes/route.ts):
+   - Removed stripCssAnimations() that was killing all visual CSS effects
+   - Removed aggressive opacity:0 forcing on all scene elements
+   - Improved scene detection with multiple fallback selectors
+   - Added CSS fallback ensuring first scene is always visible
+   - Used fromTo tweens instead of set+to for reliable opacity control
+
+2. Removed bad SoundHelix placeholder music:
+   - Emptied MUSIC_LIBRARY (was using generic MIDI tracks)
+   - selectMusicUrl() returns empty string to skip audio
+   - addAudioToVideo() bails out when no music URL
+   - Removed backgroundMusic from all render calls in page.tsx and OutputZone.tsx
+
+3. Updated HTML Creative Director Agent (69fb816c6c8540ce49b897df):
+   - Added 12 mandatory HTML structure rules
+   - Enforced opacity:1 on all scenes
+   - Required class="scene" on scene elements
+   - Required vibrant backgrounds per scene
+
+4. Updated Reel Production Manager Agent (69fb81896c8540ce49b897e1):
+   - Added quality gate checking opacity:1 on all scenes
+   - Removed background_music from response schema
+   - Added HTML validation checklist

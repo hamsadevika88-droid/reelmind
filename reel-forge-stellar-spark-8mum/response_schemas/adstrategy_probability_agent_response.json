@@ -1,0 +1,86 @@
+{
+  "agent_name": "AdStrategy Probability Agent",
+  "agent_id": "69fba22d15a0b6d02f5c943f",
+  "description": "Elite advertising strategist that analyzes products and determines highest-probability ad format, style, and approach for maximum conversion and engagement with probability-ranked recommendations.",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "result": {
+      "product_analysis": {
+        "category": "string",
+        "price_segment": "string",
+        "target_demographic": "string",
+        "unique_selling_points": "string"
+      },
+      "ad_type_rankings": [
+        {
+          "ad_type": "string",
+          "probability_score": "number",
+          "reasoning": "string"
+        }
+      ],
+      "recommended_format": {
+        "format": "string",
+        "duration_seconds": "number",
+        "aspect_ratio": "string",
+        "platform": "string"
+      },
+      "creative_brief": {
+        "mood": "string",
+        "color_palette": "string",
+        "pacing": "string",
+        "music_style": "string",
+        "presenter_type": "string",
+        "hook_strategy": "string",
+        "demo_approach": "string",
+        "target_emotion": "string",
+        "estimated_engagement_rate": "string"
+      },
+      "competitive_insights": "string"
+    }
+  },
+  "example_response": {
+    "result": {
+      "product_analysis": {
+        "category": "sample string",
+        "price_segment": "sample string",
+        "target_demographic": "sample string",
+        "unique_selling_points": "sample string"
+      },
+      "ad_type_rankings": [
+        {
+          "ad_type": "sample string",
+          "probability_score": 0,
+          "reasoning": "sample string"
+        }
+      ],
+      "recommended_format": {
+        "format": "sample string",
+        "duration_seconds": 0,
+        "aspect_ratio": "sample string",
+        "platform": "sample string"
+      },
+      "creative_brief": {
+        "mood": "sample string",
+        "color_palette": "sample string",
+        "pacing": "sample string",
+        "music_style": "sample string",
+        "presenter_type": "sample string",
+        "hook_strategy": "sample string",
+        "demo_approach": "sample string",
+        "target_emotion": "sample string",
+        "estimated_engagement_rate": "sample string"
+      },
+      "competitive_insights": "sample string"
+    }
+  },
+  "has_module_outputs": true,
+  "module_outputs_example": {
+    "artifact_files": [
+      {
+        "file_url": "https://example.com/image.png"
+      }
+    ]
+  }
+}

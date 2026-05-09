@@ -1,0 +1,78 @@
+{
+  "agent_name": "Voice Script Agent",
+  "agent_id": "69fba22eea41eba7af481907",
+  "description": "Professional voiceover scriptwriter that transforms ad scripts into polished voiceover scripts with timing marks, emotion cues, pronunciation guides, and breathing points for natural delivery.",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "result": {
+      "version_a": {
+        "style": "string",
+        "full_script": "string",
+        "word_count": "number",
+        "estimated_duration_seconds": "number",
+        "scene_markers": [
+          {
+            "scene": "string",
+            "line": "string",
+            "timing": "string",
+            "emotion": "string"
+          }
+        ]
+      },
+      "version_b": {
+        "style": "string",
+        "full_script": "string",
+        "word_count": "number",
+        "estimated_duration_seconds": "number",
+        "scene_markers": [
+          {
+            "scene": "string",
+            "line": "string",
+            "timing": "string",
+            "emotion": "string"
+          }
+        ]
+      },
+      "pronunciation_guide": "string",
+      "language": "string",
+      "recommended_version": "string"
+    }
+  },
+  "example_response": {
+    "result": {
+      "version_a": {
+        "style": "sample string",
+        "full_script": "sample string",
+        "word_count": 0,
+        "estimated_duration_seconds": 0,
+        "scene_markers": [
+          {
+            "scene": "sample string",
+            "line": "sample string",
+            "timing": "sample string",
+            "emotion": "sample string"
+          }
+        ]
+      },
+      "version_b": {
+        "style": "sample string",
+        "full_script": "sample string",
+        "word_count": 0,
+        "estimated_duration_seconds": 0,
+        "scene_markers": [
+          {
+            "scene": "sample string",
+            "line": "sample string",
+            "timing": "sample string",
+            "emotion": "sample string"
+          }
+        ]
+      },
+      "pronunciation_guide": "sample string",
+      "language": "sample string",
+      "recommended_version": "sample string"
+    }
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "agent_name": "Avatar Director Agent",
+  "agent_id": "69fba22e21f53de3abed7a0b",
+  "description": "Creative director specializing in avatar-based product demonstrations and cinematic ad visuals - designs shot-by-shot visual storyboards with camera angles, lighting, and cinematic effects.",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "result": {
+      "avatar_design": {
+        "appearance_description": "string",
+        "outfit": "string",
+        "age_range": "string",
+        "expression_style": "string",
+        "body_language": "string"
+      },
+      "shot_list": [
+        {
+          "scene_number": "number",
+          "scene_type": "string",
+          "duration_seconds": "number",
+          "camera_angle": "string",
+          "camera_movement": "string",
+          "lighting": "string",
+          "background": "string",
+          "visual_description": "string",
+          "product_interaction": "string",
+          "text_overlay": "string",
+          "transition": "string",
+          "cinematic_effect": "string"
+        }
+      ],
+      "color_grading": "string",
+      "overall_visual_style": "string",
+      "b_roll_descriptions": [
+        {
+          "shot_description": "string",
+          "purpose": "string",
+          "timing": "string"
+        }
+      ],
+      "text_style": {
+        "font_style": "string",
+        "size_hierarchy": "string",
+        "animation_type": "string",
+        "position": "string"
+      }
+    }
+  },
+  "example_response": {
+    "result": {
+      "avatar_design": {
+        "appearance_description": "sample string",
+        "outfit": "sample string",
+        "age_range": "sample string",
+        "expression_style": "sample string",
+        "body_language": "sample string"
+      },
+      "shot_list": [
+        {
+          "scene_number": 0,
+          "scene_type": "sample string",
+          "duration_seconds": 0,
+          "camera_angle": "sample string",
+          "camera_movement": "sample string",
+          "lighting": "sample string",
+          "background": "sample string",
+          "visual_description": "sample string",
+          "product_interaction": "sample string",
+          "text_overlay": "sample string",
+          "transition": "sample string",
+          "cinematic_effect": "sample string"
+        }
+      ],
+      "color_grading": "sample string",
+      "overall_visual_style": "sample string",
+      "b_roll_descriptions": [
+        {
+          "shot_description": "sample string",
+          "purpose": "sample string",
+          "timing": "sample string"
+        }
+      ],
+      "text_style": {
+        "font_style": "sample string",
+        "size_hierarchy": "sample string",
+        "animation_type": "sample string",
+        "position": "sample string"
+      }
+    }
+  },
+  "has_module_outputs": true,
+  "module_outputs_example": {
+    "artifact_files": [
+      {
+        "file_url": "https://example.com/image.png"
+      }
+    ]
+  }
+}

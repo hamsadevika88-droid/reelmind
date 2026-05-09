@@ -1,0 +1,37 @@
+{
+  "agent_name": "HTML Creative Director Agent",
+  "agent_id": "69fb816c6c8540ce49b897df",
+  "description": "Generates complete, unique HTML video compositions with CSS animations, transitions, and cinematic styling for each product. Each HTML file is a self-contained video ad that gets rendered to MP4.",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "result": {
+      "html_code": "string",
+      "total_duration_seconds": "number",
+      "scene_count": "number",
+      "creative_concept": "string",
+      "background_music": {
+        "genre": "string",
+        "mood": "string",
+        "tempo": "string",
+        "recommended_track_style": "string"
+      }
+    }
+  },
+  "example_response": {
+    "result": {
+      "html_code": "<!DOCTYPE html><html><head><style>* {margin:0;padding:0;box-sizing:border-box;} body {width:1080px;height:1920px;overflow:hidden;font-family:'Arial',sans-serif;} .scene {position:absolute;width:100%;height:100%;top:0;left:0;opacity:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px;} .scene-1 {background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);} .scene-2 {background:linear-gradient(135deg,#f093fb 0%,#f5576c 100%);} .scene-3 {background:linear-gradient(135deg,#4facfe 0%,#00f2fe 100%);} .scene h1 {font-size:72px;color:white;text-shadow:0 4px 20px rgba(0,0,0,0.3);} .scene p {font-size:32px;color:rgba(255,255,255,0.9);} @keyframes glow {0%,100%{text-shadow:0 0 20px rgba(255,255,255,0.5);}50%{text-shadow:0 0 40px rgba(255,255,255,0.8);}} .glow-text {animation:glow 2s ease-in-out infinite;}</style></head><body><div class='scene scene-1'><h1 class='glow-text'>Product Hook</h1><p>Supporting text here</p></div><div class='scene scene-2'><h1>Feature Highlight</h1><p>Key benefit description</p></div><div class='scene scene-3'><h1>Call To Action</h1><p>Get yours today</p></div></body></html>",
+      "total_duration_seconds": 20,
+      "scene_count": 6,
+      "creative_concept": "Neon Pulse - Dark background with glowing neon text animations",
+      "background_music": {
+        "genre": "Electronic",
+        "mood": "Energetic",
+        "tempo": "128 BPM",
+        "recommended_track_style": "Modern synth-driven beat with pulsing bass"
+      }
+    }
+  },
+  "has_module_outputs": false
+}
