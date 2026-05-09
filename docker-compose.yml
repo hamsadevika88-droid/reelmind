@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+
+  # ── Agent Server (CrewAI + Gemini 1.5 Pro) ──
+  agent-server:
+    build:
+      context: ./agent-server
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  # ── Video Pipeline (FFmpeg + TTS + Pexels + ElevenLabs + HeyGen) ──
+  video-pipeline:
+    build:
+      context: ./video-pipeline
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      - PEXELS_API_KEY=${PEXELS_API_KEY}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+      - HEYGEN_API_KEY=${HEYGEN_API_KEY}
+      - PIXABAY_API_KEY=${PIXABAY_API_KEY}
+      - GCS_BUCKET_NAME=${GCS_BUCKET_NAME}
+    volumes:
+      - video_outputs:/tmp/reelforge/outputs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8001/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  # ── Next.js Frontend ──
+  frontend:
+    build:
+      context: ./reel-forge-stellar-spark-8mum
+      dockerfile: Dockerfile
+    ports:
+      - "3333:3333"
+    environment:
+      - AGENT_SERVER_URL=http://agent-server:8000
+      - VIDEO_PIPELINE_URL=http://video-pipeline:8001
+      - NODE_ENV=production
+    depends_on:
+      agent-server:
+        condition: service_healthy
+      video-pipeline:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  video_outputs:
+    driver: local
