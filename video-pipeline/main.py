@@ -10,7 +10,7 @@ import shutil
 import asyncio
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
@@ -341,6 +341,158 @@ def serve_thumbnail(filename: str):
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="Thumbnail not found")
     return FileResponse(file_path, media_type="image/jpeg")
+
+
+
+# ── CINEMATIC EDIT endpoint ──
+
+class CinematicEditRequest(BaseModel):
+    job_id: str = ""
+    title: str = ""
+    subtitle: str = ""
+    cta_text: str = ""
+    color_grade: str = "cinematic"   # cinematic|warm|cool|vibrant|moody|golden|dramatic|fresh
+    effects: list = []               # zoom_in|zoom_out|pan_left|pan_right|tilt_up|tilt_down|none
+    clip_duration: float = 5.0       # seconds per clip
+    add_intro: bool = True
+    platform: str = "instagram_reels"
+    music_genre: str = "Pop"
+
+
+async def run_cinematic_edit(job_id: str, video_paths: List[str], request: CinematicEditRequest):
+    from services.cinematic_editor import create_cinematic_reel
+    from services.music_service import get_background_music
+    from services.video_enhancer import generate_thumbnail
+
+    work_dir = os.path.join(WORK_DIR, f"cinematic_{job_id}")
+    os.makedirs(work_dir, exist_ok=True)
+
+    try:
+        update_job(job_id, status="running", progress=10)
+
+        # Fetch background music
+        music_path = None
+        try:
+            music_out = os.path.join(work_dir, "music.mp3")
+            music_path = await get_background_music(request.music_genre, "Upbeat", music_out)
+        except Exception as e:
+            print(f"Music fetch failed (non-fatal): {e}")
+
+        update_job(job_id, progress=20)
+
+        final_filename = f"cinematic_{job_id}.mp4"
+        final_path = os.path.join(OUTPUT_DIR, final_filename)
+
+        success = await create_cinematic_reel(
+            video_paths=video_paths,
+            work_dir=os.path.join(work_dir, "edit"),
+            output_path=final_path,
+            title=request.title,
+            subtitle=request.subtitle,
+            cta_text=request.cta_text,
+            color_grade=request.color_grade,
+            effects=request.effects or [],
+            music_path=music_path,
+            clip_duration=request.clip_duration,
+            add_intro=request.add_intro,
+        )
+
+        if not success or not os.path.exists(final_path) or os.path.getsize(final_path) == 0:
+            raise RuntimeError("Cinematic edit produced empty file")
+
+        print(f"Cinematic edit done: {os.path.getsize(final_path)} bytes")
+
+        thumb_filename = f"thumb_cinematic_{job_id}.jpg"
+        thumb_path = os.path.join(OUTPUT_DIR, thumb_filename)
+        try:
+            generate_thumbnail(final_path, thumb_path)
+        except Exception:
+            pass
+
+        update_job(job_id,
+                   status="completed", progress=100,
+                   video_url=f"/video/{final_filename}",
+                   thumbnail_url=f"/thumbnail/{thumb_filename}" if os.path.exists(thumb_path) else None)
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        update_job(job_id, status="failed", error=str(e))
+    finally:
+        try:
+            shutil.rmtree(work_dir, ignore_errors=True)
+        except Exception:
+            pass
+
+
+@app.post("/cinematic-edit")
+async def cinematic_edit(
+    background_tasks: BackgroundTasks,
+    request: Request,
+):
+    """
+    Upload multiple raw videos + settings → get cinematic reel.
+    Accepts multipart/form-data with:
+      - files: multiple video files
+      - title, subtitle, cta_text, color_grade, effects (JSON array), clip_duration, add_intro, platform, music_genre
+    """
+    from fastapi import Request as FastAPIRequest
+    form = await request.form()
+
+    job_id = str(uuid.uuid4())
+
+    # Save uploaded files
+    upload_dir = os.path.join(WORK_DIR, f"uploads_{job_id}")
+    os.makedirs(upload_dir, exist_ok=True)
+
+    video_paths = []
+    files = form.getlist("files")
+    if not files:
+        raise HTTPException(status_code=400, detail="No video files uploaded")
+
+    for i, file in enumerate(files):
+        if hasattr(file, "filename") and file.filename:
+            ext = os.path.splitext(file.filename)[1] or ".mp4"
+            save_path = os.path.join(upload_dir, f"clip_{i}{ext}")
+            content = await file.read()
+            with open(save_path, "wb") as f:
+                f.write(content)
+            if os.path.getsize(save_path) > 0:
+                video_paths.append(save_path)
+
+    if not video_paths:
+        raise HTTPException(status_code=400, detail="No valid video files received")
+
+    import json as _json
+    effects_raw = form.get("effects", "[]")
+    try:
+        effects_list = _json.loads(effects_raw) if isinstance(effects_raw, str) else []
+    except Exception:
+        effects_list = []
+
+    edit_request = CinematicEditRequest(
+        job_id=job_id,
+        title=str(form.get("title", "")),
+        subtitle=str(form.get("subtitle", "")),
+        cta_text=str(form.get("cta_text", "")),
+        color_grade=str(form.get("color_grade", "cinematic")),
+        effects=effects_list,
+        clip_duration=float(form.get("clip_duration", 5.0)),
+        add_intro=str(form.get("add_intro", "true")).lower() == "true",
+        platform=str(form.get("platform", "instagram_reels")),
+        music_genre=str(form.get("music_genre", "Pop")),
+    )
+
+    job_store[job_id] = {
+        "job_id": job_id, "status": "pending",
+        "video_url": None, "thumbnail_url": None,
+        "error": None, "progress": 0, "tier": "cinematic",
+    }
+
+    background_tasks.add_task(run_cinematic_edit, job_id, video_paths, edit_request)
+
+    return {"success": True, "job_id": job_id, "status": "pending",
+            "clips_received": len(video_paths)}
 
 
 @app.delete("/cleanup/{job_id}")

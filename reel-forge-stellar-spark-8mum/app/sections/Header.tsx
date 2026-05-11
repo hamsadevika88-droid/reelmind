@@ -1,6 +1,7 @@
 'use client'
 
-import { Film, Zap } from 'lucide-react'
+import { Film, Zap, Clapperboard } from 'lucide-react'
+import Link from 'next/link'
 
 interface HeaderProps {
   showSample: boolean
@@ -30,6 +31,12 @@ export default function Header({ showSample, onToggleSample }: HeaderProps) {
             <span className="text-[10px] font-medium text-amber-400">CMO Quality Gate</span>
           </div>
           <div className="flex items-center gap-2">
+            <Link href="/cinematic">
+              <button className="flex items-center gap-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1.5 hover:bg-cyan-500/20 transition-colors cursor-pointer">
+                <Clapperboard className="h-3 w-3 text-cyan-400" />
+                <span className="text-[10px] font-medium text-cyan-300 hidden sm:inline">Cinematic Editor</span>
+              </button>
+            </Link>
             <label htmlFor="sample-toggle" className="text-sm font-medium text-slate-400 cursor-pointer">Sample</label>
             <button
               id="sample-toggle"
