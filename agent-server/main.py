@@ -125,3 +125,63 @@ def get_status(job_id: str):
     j = job_store[job_id]
     return JobStatus(job_id=job_id, status=j["status"], result=j.get("result"),
                      error=j.get("error"), progress=j.get("progress", 0))
+
+
+# ── Video Script Generation endpoint ──
+
+class VideoScriptRequest(BaseModel):
+    clip_count: int = 1
+    clip_names: list = []
+    user_name: str = ""
+    brand_name: str = ""
+    video_type: str = "product"
+    user_prompt: str = ""
+    language: str = "English"
+    total_duration: float = 30.0
+
+
+class ScriptRefineRequest(BaseModel):
+    original_script: dict = {}
+    user_feedback: str = ""
+    language: str = "English"
+
+
+@app.post("/generate-video-script")
+async def generate_video_script(request: VideoScriptRequest):
+    """Generate AI script for cinematic video editor."""
+    if not GEMINI_API_KEY:
+        raise HTTPException(status_code=500, detail="GEMINI_API_KEY not set")
+
+    try:
+        from services.video_script_generator import generate_video_script as gen_script
+        result = await gen_script(
+            clip_count=request.clip_count,
+            clip_names=request.clip_names,
+            user_name=request.user_name,
+            brand_name=request.brand_name,
+            video_type=request.video_type,
+            user_prompt=request.user_prompt,
+            language=request.language,
+            total_duration=request.total_duration,
+        )
+        return {"success": True, "script": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/refine-video-script")
+async def refine_video_script(request: ScriptRefineRequest):
+    """Refine existing script based on user feedback."""
+    if not GEMINI_API_KEY:
+        raise HTTPException(status_code=500, detail="GEMINI_API_KEY not set")
+
+    try:
+        from services.video_script_generator import refine_script_with_feedback
+        result = await refine_script_with_feedback(
+            original_script=request.original_script,
+            user_feedback=request.user_feedback,
+            language=request.language,
+        )
+        return {"success": True, "script": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

@@ -8,7 +8,7 @@ import os
 import uuid
 import shutil
 import asyncio
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import FastAPI, HTTPException, BackgroundTasks, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -342,6 +342,266 @@ def serve_thumbnail(filename: str):
         raise HTTPException(status_code=404, detail="Thumbnail not found")
     return FileResponse(file_path, media_type="image/jpeg")
 
+
+
+
+# ── SMART CINEMATIC EDIT endpoint (Gemini-powered) ──
+
+class SmartCinematicRequest(BaseModel):
+    job_id: str = ""
+    user_name: str = ""
+    brand_name: str = ""
+    business_type: str = "General"
+    target_audience: str = "General audience"
+    user_prompt: str = ""
+    language: str = "English"
+    platform: str = "instagram_reels"
+    music_genre: str = "Cinematic"
+    remove_noise: bool = True
+    add_intro: bool = True
+    clip_duration: float = 5.0
+
+
+async def run_smart_cinematic(job_id: str, video_paths: List[str], request: SmartCinematicRequest):
+    from services.smart_cinematic_editor import create_smart_cinematic_reel
+    from services.tts_service import generate_voiceover
+    from services.music_service import get_background_music
+    from services.video_enhancer import generate_thumbnail
+    import sys
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'agent-server'))
+
+    work_dir = os.path.join(WORK_DIR, f"smart_{job_id}")
+    os.makedirs(work_dir, exist_ok=True)
+
+    try:
+        update_job(job_id, status="running", progress=5)
+
+        # Step 1: Generate script with Gemini
+        gemini_key = os.getenv("GEMINI_API_KEY", "")
+        script_data = {}
+
+        if gemini_key:
+            try:
+                from pipeline.cinematic_script_pipeline import analyze_and_generate_script
+                filenames = [os.path.basename(p) for p in video_paths]
+                print(f"Generating script with Gemini for {len(filenames)} clips...")
+                script_data = analyze_and_generate_script(
+                    video_filenames=filenames,
+                    user_name=request.user_name,
+                    brand_name=request.brand_name,
+                    business_type=request.business_type,
+                    target_audience=request.target_audience,
+                    user_prompt=request.user_prompt,
+                    language=request.language,
+                    platform=request.platform,
+                    api_key=gemini_key,
+                )
+                print(f"Script generated: {script_data.get('video_title', 'Unknown')}")
+            except Exception as e:
+                print(f"Gemini script generation failed: {e}")
+
+        update_job(job_id, progress=20, script=script_data)
+
+        # Build scenes from script or fallback
+        scenes = script_data.get("scenes", [])
+        if not scenes:
+            import random
+            effects = ["zoom_in", "zoom_out", "pan_left", "pan_right", "tilt_up", "tilt_down"]
+            grades = ["cinematic", "warm", "vibrant", "golden", "dramatic"]
+            scenes = [
+                {
+                    "video_index": i,
+                    "scene_type": "Scene",
+                    "duration_seconds": request.clip_duration,
+                    "effect": random.choice(effects),
+                    "subtitle": "",
+                    "subtitle_position": "bottom",
+                    "color_grade": random.choice(grades),
+                    "voiceover_line": "",
+                    "transition": "fade",
+                }
+                for i in range(len(video_paths))
+            ]
+
+        update_job(job_id, progress=25)
+
+        # Step 2: Generate voiceover
+        voiceover_path = None
+        full_script = script_data.get("full_voiceover_script", "")
+        if not full_script:
+            full_script = " ".join([s.get("voiceover_line", "") for s in scenes if s.get("voiceover_line")])
+
+        if full_script and full_script.strip():
+            vo_path = os.path.join(work_dir, "voiceover.mp3")
+            try:
+                await generate_voiceover(full_script, request.language, vo_path, tier="pro")
+                if os.path.exists(vo_path) and os.path.getsize(vo_path) > 0:
+                    voiceover_path = vo_path
+                    print(f"Voiceover: {os.path.getsize(vo_path)} bytes")
+            except Exception as e:
+                print(f"Voiceover failed: {e}")
+
+        update_job(job_id, progress=40)
+
+        # Step 3: Background music
+        music_path = None
+        try:
+            genre = script_data.get("music_genre", request.music_genre)
+            mood = script_data.get("music_mood", "Upbeat")
+            music_out = os.path.join(work_dir, "music.mp3")
+            music_path = await get_background_music(genre, mood, music_out)
+        except Exception as e:
+            print(f"Music failed: {e}")
+
+        update_job(job_id, progress=50)
+
+        # Step 4: Assemble cinematic reel
+        final_filename = f"smart_cinematic_{job_id}.mp4"
+        final_path = os.path.join(OUTPUT_DIR, final_filename)
+
+        intro_title = script_data.get("intro_title", request.brand_name)
+        intro_subtitle = script_data.get("intro_subtitle", "")
+
+        success = await create_smart_cinematic_reel(
+            video_paths=video_paths,
+            scenes=scenes,
+            work_dir=os.path.join(work_dir, "edit"),
+            output_path=final_path,
+            intro_title=intro_title if request.add_intro else "",
+            intro_subtitle=intro_subtitle,
+            voiceover_path=voiceover_path,
+            music_path=music_path,
+            remove_noise=request.remove_noise,
+        )
+
+        if not success or not os.path.exists(final_path) or os.path.getsize(final_path) == 0:
+            raise RuntimeError("Smart cinematic edit failed")
+
+        print(f"Smart cinematic done: {os.path.getsize(final_path)} bytes")
+
+        thumb_filename = f"thumb_smart_{job_id}.jpg"
+        thumb_path = os.path.join(OUTPUT_DIR, thumb_filename)
+        try:
+            generate_thumbnail(final_path, thumb_path)
+        except Exception:
+            pass
+
+        update_job(job_id,
+                   status="completed", progress=100,
+                   video_url=f"/video/{final_filename}",
+                   thumbnail_url=f"/thumbnail/{thumb_filename}" if os.path.exists(thumb_path) else None,
+                   script=script_data)
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        update_job(job_id, status="failed", error=str(e))
+    finally:
+        try:
+            shutil.rmtree(work_dir, ignore_errors=True)
+        except Exception:
+            pass
+
+
+@app.post("/smart-cinematic")
+async def smart_cinematic_edit(request_obj: Request, background_tasks: BackgroundTasks):
+    """
+    Smart cinematic editor powered by Gemini.
+    Accepts multipart/form-data:
+      - files: video files
+      - user_name, brand_name, business_type, target_audience
+      - user_prompt, language, platform, music_genre
+      - remove_noise (true/false), add_intro (true/false), clip_duration
+    """
+    form = await request_obj.form()
+
+    job_id = str(uuid.uuid4())
+    upload_dir = os.path.join(WORK_DIR, f"uploads_{job_id}")
+    os.makedirs(upload_dir, exist_ok=True)
+
+    video_paths = []
+    files = form.getlist("files")
+    if not files:
+        raise HTTPException(status_code=400, detail="No video files uploaded")
+
+    for i, file in enumerate(files):
+        if hasattr(file, "filename") and file.filename:
+            ext = os.path.splitext(file.filename)[1] or ".mp4"
+            save_path = os.path.join(upload_dir, f"clip_{i:02d}{ext}")
+            content = await file.read()
+            with open(save_path, "wb") as f:
+                f.write(content)
+            if os.path.getsize(save_path) > 0:
+                video_paths.append(save_path)
+
+    if not video_paths:
+        raise HTTPException(status_code=400, detail="No valid video files received")
+
+    req = SmartCinematicRequest(
+        job_id=job_id,
+        user_name=str(form.get("user_name", "")),
+        brand_name=str(form.get("brand_name", "")),
+        business_type=str(form.get("business_type", "General")),
+        target_audience=str(form.get("target_audience", "General audience")),
+        user_prompt=str(form.get("user_prompt", "")),
+        language=str(form.get("language", "English")),
+        platform=str(form.get("platform", "instagram_reels")),
+        music_genre=str(form.get("music_genre", "Cinematic")),
+        remove_noise=str(form.get("remove_noise", "true")).lower() == "true",
+        add_intro=str(form.get("add_intro", "true")).lower() == "true",
+        clip_duration=float(form.get("clip_duration", 5.0)),
+    )
+
+    job_store[job_id] = {
+        "job_id": job_id, "status": "pending",
+        "video_url": None, "thumbnail_url": None,
+        "error": None, "progress": 0, "tier": "smart_cinematic",
+        "script": None,
+    }
+
+    background_tasks.add_task(run_smart_cinematic, job_id, video_paths, req)
+
+    return {"success": True, "job_id": job_id, "status": "pending",
+            "clips_received": len(video_paths)}
+
+
+@app.post("/update-script/{job_id}")
+async def update_script(job_id: str, request_obj: Request):
+    """Update the generated script with user's new prompt."""
+    if job_id not in job_store:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    body = await request_obj.json()
+    update_prompt = body.get("update_prompt", "")
+    user_name = body.get("user_name", "")
+    brand_name = body.get("brand_name", "")
+    language = body.get("language", "English")
+
+    existing_script = job_store[job_id].get("script", {})
+    if not existing_script:
+        raise HTTPException(status_code=400, detail="No script found for this job")
+
+    gemini_key = os.getenv("GEMINI_API_KEY", "")
+    if not gemini_key:
+        raise HTTPException(status_code=500, detail="GEMINI_API_KEY not configured")
+
+    try:
+        import sys
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'agent-server'))
+        from pipeline.cinematic_script_pipeline import update_script as update_fn
+        updated = update_fn(existing_script, update_prompt, user_name, brand_name, language, gemini_key)
+        job_store[job_id]["script"] = updated
+        return {"success": True, "script": updated}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/script/{job_id}")
+def get_script(job_id: str):
+    """Get the generated script for a job."""
+    if job_id not in job_store:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return {"success": True, "script": job_store[job_id].get("script", {})}
 
 
 # ── CINEMATIC EDIT endpoint ──
